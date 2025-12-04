@@ -1,4 +1,4 @@
-import Vehicle from "../models/Vehicle.js";
+import Vehicle from "../models/vehicle.js";
 import { fetchFromExternalAPI } from "../utils/externalApi.js";
 import { checkInsuranceExpiration } from "../utils/dateComparison.js";
 import { uppercaseRTO } from "../utils/uppercase.js";
