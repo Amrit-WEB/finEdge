@@ -4,14 +4,27 @@ import axios from "axios";
 export function App() {
   const [number, setNumber] = useState("");
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
+    if (!number) {
+      alert("Required RTO");
+      return;
+    }
+
+    setLoading(true);
     const res = await axios.get(
       `https://finedgebackend.onrender.com/api/rto/check?rto=${number}`
     );
-    console.log(res.data.data);
+
+    if (res.data.data.message) {
+      setLoading(false);
+      alert(res.data.data.message);
+      return;
+    }
     setResult(res.data);
     setNumber("");
+    setLoading(false);
   };
 
   return (
@@ -23,6 +36,7 @@ export function App() {
           <input
             className="border-2 border-sky-700 p-2 rounded"
             type="text"
+            required
             placeholder="Enter RTO Number"
             value={number}
             onChange={(e) => setNumber(e.target.value)}
@@ -35,9 +49,13 @@ export function App() {
             Search
           </button>
         </div>
-
+        {loading && (
+          <p className="text-white mt-4 bg-sky-300 p-3 rounded w-100 text-center">
+            Loading...
+          </p>
+        )}
         {result && (
-          <div className="uppercase mt-4 bg-sky-200 p-3 rounded ">
+          <div className="uppercase mt-4 bg-sky-300 p-3 rounded ">
             <p>
               <b>RTO:</b> {result.data.rtoNumber}
             </p>
