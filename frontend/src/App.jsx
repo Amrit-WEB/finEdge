@@ -14,34 +14,47 @@ export function App() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>RTO Vehicle Check</h2>
+    <div className="h-screen w-full p-2 flex items-center justify-center">
+      <div className=" shadown rounded w-full md:w-2/3 lg:w-1/2 p-2 bg-sky-100 flex flex-col items-center">
+        <h2 className="text-lg mb-4">RTO Vehicle Check</h2>
 
-      <input
-        type="text"
-        placeholder="Enter RTO Number"
-        value={number}
-        onChange={(e) => setNumber(e.target.value)}
-      />
+        <div className="">
+          <input
+            className="border-2 border-sky-700 p-2 rounded"
+            type="text"
+            placeholder="Enter RTO Number"
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
+          />
 
-      <button onClick={handleSearch}>Search</button>
-
-      {result && (
-        <div style={{ marginTop: 20 }}>
-          <p>
-            <b>Source:</b> {result.source}
-          </p>
-          <p>
-            <b>Owner:</b> {result.data.owner}
-          </p>
-          <p>
-            <b>Vehicle:</b> {result.data.model}
-          </p>
-          <p>
-            <b>Insurance:</b> {result.data.insuranceUpto}
-          </p>
+          <button
+            className="bg-sky-700 text-white p-2 rounded shadow-xs cursor-pointer ml-2"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
         </div>
-      )}
+
+        {result && (
+          <div className="uppercase mt-4 bg-sky-200 p-3 rounded ">
+            <p>
+              <b>RTO:</b> {result.data.rtoNumber}
+            </p>
+            <p>
+              <b>Owner:</b> {result.data.owner}
+            </p>
+            <p>
+              <b>Vehicle:</b> {result.data.model}
+            </p>
+            <p>
+              <b>Insurance:</b> {result.data.insuranceUpto}
+            </p>
+            <p className="text-xs text-center border p-2 bg-red-500 rounded mt-3 w-1/2 m-auto text-white">
+              {result.source}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
