@@ -7,7 +7,7 @@ export function App() {
 
   const handleSearch = async () => {
     const res = await axios.get(
-      `http://localhost:5000/api/rto/check?rto=${number}`
+      `https://finedgebackend.onrender.com/api/rto/check?rto=${number}`
     );
     console.log(res.data.data);
     setResult(res.data);
