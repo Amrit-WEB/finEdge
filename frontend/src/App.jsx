@@ -11,6 +11,7 @@ export function App() {
     );
     console.log(res.data.data);
     setResult(res.data);
+    setNumber("");
   };
 
   return (
@@ -45,6 +46,14 @@ export function App() {
             </p>
             <p>
               <b>Vehicle:</b> {result.data.model}
+            </p>
+            <p>
+              <b>Chessis Number:</b>{" "}
+              {result.data.chassisNumber.slice(0, 5) + "XXXX"}
+            </p>
+            <p>
+              <b>Engine Number:</b>{" "}
+              {result.data.engineNumber.slice(0, 5) + "XXXX"}
             </p>
             <p>
               <b>Insurance:</b> {result.data.insuranceUpto}
