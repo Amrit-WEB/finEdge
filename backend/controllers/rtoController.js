@@ -21,7 +21,7 @@ export const checkRTO = async (req, res) => {
     // -----------------------------------------------
     // CASE 1: Data Found in DB
     // -----------------------------------------------
-    if (vehicle) {
+    if (vehicle?.apiResponse) {
       const isExpired = checkInsuranceExpiration(
         vehicle.apiResponse.insuranceUpto
       );
@@ -36,10 +36,14 @@ export const checkRTO = async (req, res) => {
 
       // expired → fresh API call
       const freshData = await fetchFromExternalAPI(number);
+
+      if (freshData.success === false) {
+        return res.json({ error: freshData.res });
+      }
       // Update DB
       await Vehicle.updateOne(
         { rtoNumber: number },
-        { $set: { apiResponse: freshData } }
+        { $set: { apiResponse: freshData.res } }
       );
 
       return res.json({
@@ -51,25 +55,31 @@ export const checkRTO = async (req, res) => {
     // -----------------------------------------------
     // CASE 2: Not Found In DB → External API
     // -----------------------------------------------
-    const apiData = await fetchFromExternalAPI(number);
+    if (!vehicle) {
+      const apiData = await fetchFromExternalAPI(number);
 
-    const newVehicle = await Vehicle.create({
-      rtoNumber: number,
-      apiResponse: apiData,
-    });
+      if (apiData.success === false) {
+        return res.json({ error: apiData.res });
+      }
 
-    return res.json({
-      source: "external-first-call",
-      data: filterData(newVehicle),
-    });
+      const newVehicle = await Vehicle.create({
+        rtoNumber: number,
+        apiResponse: apiData.res,
+      });
+
+      return res.json({
+        source: "external-first-call",
+        data: filterData(newVehicle),
+      });
+    }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Something went wrong." });
   }
 };
 
 // Filter before sending to frontend
 function filterData(vehicle) {
+  //   return vehicle;
   return {
     rtoNumber: vehicle.rtoNumber,
     owner: vehicle.apiResponse.owner,
